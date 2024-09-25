@@ -3,6 +3,8 @@ name: Test Iris Model
 on:
   workflow_run:
     workflows: ["Train Iris Model"]
+    branches:
+      - main  # Ensure the branch condition matches the one in train.yml
     types:
       - completed
 
