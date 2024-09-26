@@ -32,7 +32,7 @@ jobs:
 
       # List files to verify model.pkl is created
       - name: List files in the directory
-        run: ls -al
+        run: ls -al | grep model
 
       # Upload model as an artifact
       - name: Upload model artifact
