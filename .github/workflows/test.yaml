@@ -15,6 +15,12 @@ jobs:
 
     steps:
       # Checkout the repository
+
+      - name: List uploaded artifacts
+        uses: actions/list-artifacts@v3
+        with:
+          path: .
+          
       - name: Checkout code
         uses: actions/checkout@v3
 
