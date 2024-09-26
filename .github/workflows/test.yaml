@@ -18,13 +18,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Download the trained model artifact from the previous pipeline
-      - name: Download model artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: iris-model
-          path: ./  # Downloads the artifact to the current directory
-
       # Add the testing data file
       - name: Add test data
         run: |
