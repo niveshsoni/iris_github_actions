@@ -30,6 +30,10 @@ jobs:
       - name: Train model
         run: python training.py
 
+      # List files to verify model.pkl is created
+      - name: List files in the directory
+        run: ls -al
+
       # Upload model as an artifact
       - name: Upload model artifact
         uses: actions/upload-artifact@v3

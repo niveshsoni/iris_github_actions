@@ -1,24 +1,46 @@
-import json
-import pickle
-from sklearn.metrics import accuracy_score
+name: Test Iris Model
 
-# Load the model
-with open("model.pkl", "rb") as model_file:
-    model = pickle.load(model_file)
+on:
+  workflow_run:
+    workflows: ["Train Iris Model"]  # Ensure the workflow name matches
+    branches:
+      - main
+    types:
+      - completed
 
-# Load the test data
-with open("data.json", "r") as data_file:
-    test_data = json.load(data_file)
+jobs:
+  test:
+    runs-on: ubuntu-latest
 
-X_test = test_data["data"]
-y_expected = test_data["expected"]
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-# Make predictions using the loaded model
-y_pred = model.predict(X_test)
+      # Download the trained model artifact from the previous pipeline
+      - name: Download model artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: iris-model
+          path: ./  # Downloads the artifact to the current directory
 
-# Calculate accuracy
-accuracy = accuracy_score(y_expected, y_pred)
-print(f"Test Accuracy: {accuracy * 100:.2f}%")
+      # Add the testing data file
+      - name: Add test data
+        run: |
+          echo '{ "data": [[5.1, 3.5, 1.4, 0.2], [6.2, 3.4, 5.4, 2.3], [5.9, 3.0, 5.1, 1.8]], "expected": [0, 2, 2] }' > data.json
 
-# Assert that the model passes a threshold accuracy
-assert accuracy > 0.9, "Model accuracy is below acceptable threshold!"
+      # Setup Python 3.10
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Run test script
+      - name: Run tests
+        run: python test.py
