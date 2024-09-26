@@ -18,6 +18,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Checkout the repository
+      - name: list directory
+        run: ls
+
       # Add the testing data file
       - name: Add test data
         run: |
